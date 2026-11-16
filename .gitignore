@@ -1,0 +1,21 @@
+# Fotos, volcados y archivos generados durante pruebas
+foto*.jpg
+captura*.txt
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Arduino
+build/
+*.bin
+*.elf
+*.map
+
+# Sistema y editor
+.DS_Store
+Thumbs.db
+.vscode/
