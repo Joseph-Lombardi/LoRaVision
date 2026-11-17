@@ -83,6 +83,18 @@ Los **32 bytes del receptor coinciden** con los del emisor y empiezan por `FFD8`
 
 Durante las pruebas hubo fallos intermitentes de ejecución `cc1plus.exe` / `Access is denied` con Arduino IDE y CLI; el mismo compilador funcionó directamente en PowerShell. Se cambió el proveedor antivirus principal de Reason Cybersecurity a Microsoft Defender. Posteriormente se obtuvo compilación y carga, **sin demostrar que el cambio de antivirus fuese la causa de la solución**.
 
+## 2026-11-16 — Primer JPEG completo transmitido y reconstruido automáticamente
+
+**Resultado reportado por el desarrollador:** la fotografía se transmite por LoRa entre dos Heltec V3 y se reconstruye directamente en Python, guardándose en un archivo JPEG. Ya no es necesario copiar el volcado hexadecimal manualmente.
+
+**Arquitectura:** ArduCam Mega 5MP-AF → Heltec V3 emisor (captura a RAM, liberación SPI) → LoRa P2P 915 MHz, bloques de 64 bytes con secuencia, ACK y reintentos → Heltec V3 receptor → USB serial → Python + PySerial → `fotoN.jpg`.
+
+Se publicó una versión separada del firmware de emisor, receptor y el script de Python en el repositorio. El código de la prueba previa de 32 bytes se mantuvo.
+
+**Nivel de evidencia:** existe confirmación directa del resultado funcional por parte del desarrollador, pero no se entregaron en esta etapa archivos JPEG resultantes, logs completos, tiempos medidos ni tasas de pérdida. La transferencia completa funciona en las condiciones ensayadas; faltan pruebas de desempeño y robustez.
+
+**Documentos:** [Transferencia completa](transmision_completa.md), [incidencia del compilador y antivirus](problemas_compilacion_antivirus.md).
+
 ## Próximo hito
 
-Transmitir el JPEG por bloques desde el Heltec emisor hacia otro Heltec, gestionar pérdidas y reconstruir automáticamente en la PC.
+Repetir la transferencia a distancias controladas, medir latencia y reintentos, comparar integridad de origen/destino y mejorar recuperación de transmisiones interrumpidas.
