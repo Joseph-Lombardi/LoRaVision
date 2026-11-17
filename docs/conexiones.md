@@ -13,4 +13,6 @@ El firmware inicializa SPI con `SPI.begin(6, 5, 4, 7)`. Durante las pruebas se c
 
 Placa de desarrollo: **Heltec WiFi LoRa 32(V3)**. Paquete de placas usado tras resolver un fallo del compilador: **esp32 by Espressif Systems 3.2.1**.
 
-**Fase LoRa futura:** frecuencia de trabajo prevista: **915 MHz**, con otro Heltec V3 como receptor. Antes de transmitir fotos se necesita implementar fragmentación, índice de paquetes, reintentos y verificación de integridad.
+**Prueba LoRa validada:** 915 MHz con otro Heltec V3 como receptor. Tras leer 32 bytes de ArduCam, el emisor liberó el bus de la cámara mediante `digitalWrite(CAM_CS, HIGH); SPI.end();`, esperó 200 ms e inicializó la radio con `Mcu.begin(HELTEC_BOARD, SLOW_CLK_TPYE);`. Esto permitió enviar un fragmento inicial JPEG real y recibirlo íntegro.
+
+**Límite:** al liberar SPI, esta prueba ya no vuelve a leer la cámara. Para enviar JPEG completo habrá que diseñar un búfer/captura completa o arbitraje SPI seguro; no basta con repetir `Radio.Send` sin resolver el acceso a cámara.
