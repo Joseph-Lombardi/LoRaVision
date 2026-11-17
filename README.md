@@ -1,18 +1,19 @@
 # LoRaVision 📷📡
 
-Proyecto experimental de captura y futura transmisión de imágenes mediante **ArduCam Mega 5MP-AF**, **Heltec WiFi LoRa 32 V3 (ESP32-S3)** y **Python**.
+Proyecto experimental de captura y transmisión inalámbrica progresiva de imágenes mediante **ArduCam Mega 5MP-AF**, **Heltec WiFi LoRa 32 V3 (ESP32-S3)** y **Python**.
 
-## Estado del proyecto (16/11/2026)
+## Estado del proyecto (16–17/11/2026)
 
 - ✅ Captura de fotografías JPEG desde ArduCam Mega mediante SPI.
 - ✅ Exportación hexadecimal del JPEG por monitor serial a 115200 baudios.
 - ✅ Reconstrucción en Python desde `INICIO_JPEG` / `FIN_JPEG`, ignorando relleno posterior a `FFD9`.
 - ✅ Balance de blancos automático y ajustes de imagen aplicados en el firmware de captura.
 - ✅ Guardado de archivos `foto1.jpg`, `foto2.jpg`, etc., sin sobrescribir.
-- ✅ Pruebas independientes de mensajes entre módulos Heltec mediante LoRa.
-- 🚧 **Pendiente:** unir captura con fragmentación/transmisión LoRa, recepción íntegra y reconstrucción automática sin pegar texto.
+- ✅ Prueba de integración: **32 bytes iniciales de un JPEG real transmitidos y recibidos por LoRa a 915 MHz** entre dos Heltec V3.
+- ✅ Confirmación de transmisión por `OnTxDone()` y recepción de payload idéntico, con RSSI **−15 dBm** en la prueba de proximidad.
+- 🚧 **Pendiente:** enviar el JPEG completo en fragmentos, validar integridad, gestionar pérdidas y reconstruir automáticamente sin pegar texto.
 
-> Importante: la transmisión *completa* de fotografías por LoRa todavía no está validada. El firmware de este repositorio contiene el módulo de captura por USB/serial; no afirma transmisión de imágenes ya implementada.
+> Importante: la transmisión *completa* de fotografías por LoRa todavía no está validada. Se ha validado **solo un paquete de 32 bytes reales del JPEG** por LoRa, no una fotografía completa. La versión de prueba de emisor/receptor se conserva bajo `firmware/prueba_lora_jpeg/`.
 
 ## Estructura
 
@@ -20,11 +21,15 @@ Proyecto experimental de captura y futura transmisión de imágenes mediante **A
 firmware/
   captura_arducam/
     captura_arducam.ino
+  prueba_lora_jpeg/
+    emisor_lora.ino
+    receptor_lora.ino
 python/
   reconstruir.py
 docs/
   conexiones.md
   avances.md
+  prueba_lora_jpeg.md
 .gitignore
 ```
 
@@ -57,7 +62,7 @@ Se utiliza la **última captura completa** del texto y se guarda como `fotoN.jpg
 ## Próximas etapas
 
 1. Fragmentar JPEG en paquetes numerados.
-2. Transmitir paquetes desde el Heltec emisor por LoRa (915 MHz).
+2. Extender la prueba **ya validada de 32 bytes** a transmisión de múltiples paquetes LoRa (915 MHz).
 3. Reconstruir la imagen con integridad/completitud en el receptor.
 4. Entregar los datos a Python para generar fotos automáticamente.
 5. Medir tasa efectiva, tiempos, pérdida de paquetes y fiabilidad.
