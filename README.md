@@ -24,12 +24,12 @@ firmware/
   prueba_lora_jpeg/
     emisor_lora.ino
     receptor_lora.ino
+    README.md
 python/
   reconstruir.py
 docs/
   conexiones.md
   avances.md
-  prueba_lora_jpeg.md
 .gitignore
 ```
 
