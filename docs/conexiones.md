@@ -15,4 +15,4 @@ Placa de desarrollo: **Heltec WiFi LoRa 32(V3)**. Paquete de placas usado tras r
 
 **Prueba LoRa validada:** 915 MHz con otro Heltec V3 como receptor. Tras leer 32 bytes de ArduCam, el emisor liberó el bus de la cámara mediante `digitalWrite(CAM_CS, HIGH); SPI.end();`, esperó 200 ms e inicializó la radio con `Mcu.begin(HELTEC_BOARD, SLOW_CLK_TPYE);`. Esto permitió enviar un fragmento inicial JPEG real y recibirlo íntegro.
 
-**Límite:** al liberar SPI, esta prueba ya no vuelve a leer la cámara. Para enviar JPEG completo habrá que diseñar un búfer/captura completa o arbitraje SPI seguro; no basta con repetir `Radio.Send` sin resolver el acceso a cámara.
+**Integración posterior (JPEG completo):** el emisor lee todo el JPEG desde la cámara a RAM y **después** libera SPI con `digitalWrite(CAM_CS, HIGH); SPI.end();` antes de inicializar el SX1262. Así evita que los cambios del bus interfieran mientras se envían los múltiples paquetes de hasta 64 bytes. Prueba funcional reportada; medir robustez y consumo queda pendiente. Véase [documentación](transmision_completa.md).
